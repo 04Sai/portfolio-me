@@ -1,0 +1,57 @@
+import { useCursorStore } from "../../store/useCursorStore";
+
+export default function Contact() {
+    return (
+        <>
+            <div className="lg:hidden flex flex-row items-end justify-center gap-3 text-[clamp(0.4rem,1.5vw,1.5rem) font-extralight">
+                {/* <Icon brand="fa-brands fa-linkedin" url="" label="Visit LinkedIn profile" /> */}
+                {/* <Icon brand="fa-brands fa-instagram" url="" label="Visit Instagram profile" /> */}
+                <Icon brand="fa-brands fa-github" url="https://github.com/04Sai" label="Visit GitHub profile" />
+                {/* <Email /> */}
+            </div>
+
+            <div className="hidden lg:flex lg:flex-col lg:items-start lg:gap-2 lg:pt-5 lg:text-[clamp(1rem,1.5vw,1.5rem)] lg:font-extralight">
+                {/* <Icon brand="fa-brands fa-linkedin" url="" label="Visit LinkedIn profile" /> */}
+                {/* <Icon brand="fa-brands fa-instagram" url="" label="Visit Instagram profile" /> */}
+                <Icon brand="fa-brands fa-github" url="https://github.com/04Sai" label="Visit GitHub profile" />
+                {/* <Email /> */}
+            </div>
+        </>
+    )
+}
+
+type Props = {
+    brand: string,
+    url: string,
+    label: string,
+}
+
+function Icon({brand, url, label} : Props) {
+    const set = useCursorStore((state) => state.setCursorType);
+    return (
+        <a
+            href={url}
+            aria-label={label}
+            target="_blank"
+            rel="noopener noreferrer"
+            onMouseEnter={() => set("hover")}
+            onMouseLeave={() => set("default")}
+        >
+            <i className={`${brand}`} aria-hidden="true" />
+        </a>
+    )
+}
+
+function Email() {
+    const set = useCursorStore((state) => state.setCursorType);
+    return (
+        <a
+            href="mailto:kento9941@gmail.com"
+            aria-label="Send an email to Kento Kawazoe"
+            onMouseEnter={() => set("hover")}
+            onMouseLeave={() => set("default")}
+        >
+            <i className="fa-regular fa-envelope" aria-hidden="true" />
+        </a>
+    )
+}
