@@ -47,11 +47,11 @@ export default function Home() {
                                     }}
                                 >
                                     <motion.span variants={item}>S</motion.span>
-                                    <motion.span variants={item}>Y</motion.span>
-                                    <motion.span variants={item}>M</motion.span>
-                                    <motion.span variants={item}>O</motion.span>
+                                    <motion.span variants={item}>A</motion.span>
+                                    <motion.span variants={item}>I</motion.span>
+                                    {/* <motion.span variants={item}>O</motion.span>
                                     <motion.span variants={item}>N</motion.span>
-                                    <motion.span variants={item}>D</motion.span>
+                                    <motion.span variants={item}>D</motion.span> */}
                                 </motion.h1>
                             </div>
                             {/* <div className="h-auto overflow-hidden">
@@ -171,12 +171,12 @@ function Email() {
     const set = useCursorStore((state) => state.setCursorType);
     return (
         <a
-            href="mailto:symond042204@gmail.com"
+            href="mailto:sai042204@gmail.com"
             aria-label="Send an email to Sai"
             onMouseEnter={() => set("hover")}
             onMouseLeave={() => set("default")}
         >
-            symond042204@gmail.com
+            sai042204@gmail.com
         </a>
     )
 }
