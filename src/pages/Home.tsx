@@ -16,7 +16,6 @@ const item = {
 };
 
 export default function Home() {
-    const set = useCursorStore((state) => state.setCursorType);
     const { theme } = useThemeStore();
 
     return (

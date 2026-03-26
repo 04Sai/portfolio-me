@@ -42,16 +42,3 @@ function Icon({brand, url, label} : Props) {
     )
 }
 
-function Email() {
-    const set = useCursorStore((state) => state.setCursorType);
-    return (
-        <a
-            href="mailto:kento9941@gmail.com"
-            aria-label="Send an email to Kento Kawazoe"
-            onMouseEnter={() => set("hover")}
-            onMouseLeave={() => set("default")}
-        >
-            <i className="fa-regular fa-envelope" aria-hidden="true" />
-        </a>
-    )
-}
