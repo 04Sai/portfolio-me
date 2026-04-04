@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { useCursorStore } from "../store/useCursorStore";
 import { useThemeStore } from "../store/useThemeStore";
 import { Link } from "react-router-dom";
+import { projects } from "../components/projects";
 
 const item = {
     initial: { y: "2rem", opacity: 0 },
@@ -100,8 +102,8 @@ export default function Home() {
                 </div>
             </motion.section>
 
-            {/* works */}
-            <WorksSection />
+            {/* projects */}
+            <ProjectsSection />
 
             {/* skills */}
             <motion.section
@@ -181,12 +183,19 @@ function Email() {
     )
 }
 
-function WorksSection() {
+function ProjectsSection() {
     const { theme } = useThemeStore();
     const set = useCursorStore((state) => state.setCursorType);
+    const [visibleCount, setVisibleCount] = useState(4);
+    const visibleProjects = projects.slice(0, visibleCount);
+
+    const handleLoadMore = () => {
+        setVisibleCount((prev) => Math.min(prev + 4, projects.length));
+    };
 
     return (
         <motion.section
+            id="projects"
             className="relative w-screen pt-[5vh] pl-[10vw] lg:pt-[clamp(5rem,15vh,10rem)] lg:pl-[15vw] flex flex-col snap-center"
             initial={{ opacity: 0, filter: "blur(1px)" }}
             whileInView={{ opacity: 1, filter: "blur(0px)" }}
@@ -195,31 +204,60 @@ function WorksSection() {
         >
             <div className="flex flex-col items-start justify-start">
                 <div className="h-[15vh] flex items-end text-[clamp(1rem,1.5vw,2rem)] font-light mb-1">
-                    <h1>WORKS</h1>
+                    <h1>PROJECTS</h1>
                 </div>
 
                 <div className="w-[80vw] lg:w-[75vw] h-[1px] bg-[#888888aa]"/>
 
                 <div className="mt-[5vh] w-[80vw] lg:w-[75vw] flex flex-col items-center justify-center">
-                    <p className="text-[clamp(1.2rem,2vw,2.5rem)] font-light tracking-widest mb-8">COMING SOON</p>
-                    
                     <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {[1, 2, 3, 4].map((i) => (
+                        {visibleProjects.map((project) => (
                             <Link
-                                key={i}
-                                to={`/Works/${i}`}
+                                key={project.id}
+                                to={`/projects/${project.id}`}
                                 className="group flex flex-col gap-2"
                                 onMouseEnter={() => set("hover")}
                                 onMouseLeave={() => set("default")}
                             >
-                                <div className={`w-full aspect-[2/1] rounded-sm ${theme === "dark" ? "bg-[#35322b] group-hover:bg-[#fff4e4] group-hover:opacity-60" : "bg-[#d1c7b7] group-hover:bg-[#b8ad9e] group-hover:opacity-80"} animate-pulse transition-colors duration-300`} />
+                                <div className={`relative w-full aspect-[2/1] rounded-sm overflow-hidden ${theme === "dark" ? "bg-[#35322b]" : "bg-[#d1c7b7]"}`}>
+                                    {project.bg1 && (
+                                        <img
+                                            src={project.bg1}
+                                            alt="Project background"
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                        />
+                                    )}
+                                    {!project.bg1 && project.image1 && !project.image1.endsWith(".mp4") && (
+                                        <img
+                                            src={project.image1}
+                                            alt={project.title || "Project image"}
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            loading="lazy"
+                                            decoding="async"
+                                        />
+                                    )}
+                                </div>
                                 <div className="flex flex-col gap-2">
-                                    <div className={`h-4 w-3/4 rounded ${theme === "dark" ? "bg-[#35322b]" : "bg-[#d1c7b7]"} animate-pulse`} />
-                                    <div className={`h-3 w-1/2 rounded ${theme === "dark" ? "bg-[#23211e]" : "bg-[#b8ad9e]"} animate-pulse`} />
+                                    <div className="text-[clamp(0.9rem,1.1vw,1.2rem)] font-light tracking-wide">
+                                        {project.title || "UNTITLED"}
+                                    </div>
+                                    <div className={`h-[1px] w-full ${theme === "dark" ? "bg-[#88888866]" : "bg-[#88888899]"}`} />
                                 </div>
                             </Link>
                         ))}
                     </div>
+
+                    {visibleCount < projects.length && (
+                        <button
+                            type="button"
+                            className="self-start mt-8 px-5 py-2 border border-[#888888aa] text-[clamp(0.8rem,1vw,1.1rem)] font-light tracking-wide"
+                            onClick={handleLoadMore}
+                            onMouseEnter={() => set("hover")}
+                            onMouseLeave={() => set("default")}
+                        >
+                            LOAD MORE
+                        </button>
+                    )}
                 </div>
             </div>
         </motion.section>

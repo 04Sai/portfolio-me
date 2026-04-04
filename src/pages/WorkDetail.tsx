@@ -7,16 +7,27 @@ import { useThemeStore } from "../store/useThemeStore";
 import NotFound from "./NotFound";
 
 export default function WorkDetail() {
+    const set = useCursorStore((state) => state.setCursorType);
+    const { theme } = useThemeStore();
     const { id } = useParams();
     const data = projects.find((p) => p.id === id);
-    const nextData = projects.find((p) => p.id === data?.next);
+    const navigableProjects = projects.filter((p) => p.title.trim().length > 0);
+    const currentIndex = navigableProjects.findIndex((p) => p.id === id);
+    const previousData = currentIndex > 0 ? navigableProjects[currentIndex - 1] : undefined;
+    const nextData = currentIndex >= 0 && currentIndex < navigableProjects.length - 1
+        ? navigableProjects[currentIndex + 1]
+        : undefined;
 
     if (!data) {
         return <NotFound />;
     }
 
-    const set = useCursorStore((state) => state.setCursorType);
-    const { theme } = useThemeStore();
+    const mediaItems = [
+        { image: data.image1, bg: data.bg1, loading: "eager" as const },
+        { image: data.image2, bg: data.bg2, loading: "eager" as const },
+        { image: data.image3, bg: data.bg3, loading: undefined },
+        { image: data.image4, bg: data.bg4, loading: "lazy" as const },
+    ].filter((item) => Boolean(item.image));
 
     return (
         <motion.main
@@ -24,9 +35,9 @@ export default function WorkDetail() {
             exit={{ opacity: 0, filter: "blur(1px)" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
         >
-            <NavLink to="/Works">
+            <NavLink to="/#projects">
                 <motion.div
-                    className="sm:landscape:hidden md:landscape:hidden lg:landscape:flex fixed top-[10vh] left-[5vw] lg:top-[5vh] lg:left-[15vw] text-[clamp(0.6rem,1vw,1.5rem)] md:text-[clamp(1rem,1.5vw,1.5rem)] font-light flex flex-row items-center gap-1 z-10"
+                    className="fixed top-[8vh] left-[5vw] lg:top-[5vh] lg:left-[15vw] text-[clamp(0.6rem,1vw,1.5rem)] md:text-[clamp(1rem,1.5vw,1.5rem)] font-light flex flex-row items-center gap-1 z-10"
                     initial={{ opacity: 0, filter: "blur(1px)" }}
                     animate={{ opacity: 1, filter: "blur(0px)" }}
                     transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
@@ -100,60 +111,55 @@ export default function WorkDetail() {
                 animate={{ opacity: 1, filter: "blur(0px)" }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
             >
-                <div className="flex flex-row items-end justify-between">
+                <div className="flex flex-row items-end justify-between gap-4">
                     <div className="h-[15vh] flex items-end text-[clamp(1rem,1.5vw,2rem)] md:text-[clamp(1.5rem,2.5vw,2.5rem)] font-light">
                         <h1>{data?.title}</h1>
                     </div>
                     
                     <div
-                        className={`hidden lg:flex lg:flex-row lg:items-end lg:gap-[1rem] lg:text-[clamp(1rem,1.5vw,1.5rem)] lg:font-light lg:mb-[clamp(0.2rem,1.2vh,0.8rem)]
-                            landscape:flex landscape:flex-row landscape:items-end landscape:gap-[1rem] landscape:text-[clamp(0.8rem,1.2vw,1.2rem)] landscape:font-light
+                        className={`flex flex-row items-center justify-end gap-4 lg:gap-6 text-[clamp(0.85rem,1.25vw,1.5rem)] md:text-[clamp(1.1rem,1.8vw,2rem)] font-light mb-[clamp(0.2rem,1.2vh,0.8rem)]
                         `}>
-                        {data?.github &&
-                        (
-                            <a
-                                href={data?.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1"
+                        {previousData && (
+                            <Link
+                                key={previousData.id}
+                                to={`/projects/${previousData.id}`}
                                 onMouseEnter={() => set("hover")}
                                 onMouseLeave={() => set("default")}
+                                className="inline-flex items-center gap-2"
                             >
-                                GitHub
                                 <span>
-                                    <svg width="clamp(0.6rem,1vw,1.5rem)" height="clamp(0.6rem,1vw,1.5rem)" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <line x1="0.353478" y1="71.3571" x2="71.0642" y2="0.646433" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                        <line x1="21.707" y1="0.5" x2="71.707" y2="0.5" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                        <line x1="71.207" y1="50" x2="71.207" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                    <svg width="clamp(0.9rem,1.2vw,1.6rem)" height="clamp(0.9rem,1.2vw,1.6rem)" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="101.795" y1="50.2071" x2="1.79534" y2="50.2071" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                        <line x1="36.5927" y1="85.2064" x2="1.23737" y2="49.851" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                        <line x1="36.5927" y1="15.2028" x2="1.23737" y2="50.5581" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
                                     </svg>
                                 </span>
-                            </a>
+                                <span>{previousData.title}</span>
+                            </Link>
                         )}
 
-                        {data?.demo &&
-                        (
-                            <a
-                                href={data?.demo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1"
+                        {nextData && (
+                            <Link
+                                key={nextData.id}
+                                to={`/projects/${nextData.id}`}
                                 onMouseEnter={() => set("hover")}
                                 onMouseLeave={() => set("default")}
+                                className="inline-flex items-center gap-2"
                             >
-                                Demo
+                                <span>{nextData.title}</span>
                                 <span>
-                                    <svg width="clamp(0.6rem,1vw,1.5rem)" height="clamp(0.6rem,1vw,1.5rem)" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <line x1="0.353478" y1="71.3571" x2="71.0642" y2="0.646433" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                        <line x1="21.707" y1="0.5" x2="71.707" y2="0.5" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                        <line x1="71.207" y1="50" x2="71.207" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                    <svg width="clamp(0.9rem,1.2vw,1.6rem)" height="clamp(0.9rem,1.2vw,1.6rem)" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="0.204656" y1="50.2071" x2="100.205" y2="50.2071" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                        <line x1="65.4073" y1="15.2028" x2="100.763" y2="50.5581" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                        <line x1="65.4073" y1="85.2064" x2="100.763" y2="49.851" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
                                     </svg>
                                 </span>
-                            </a>
+                            </Link>
                         )}
                     </div>
                 </div>
 
-                <div className="w-[80vw] h-[1px] bg-[#888888aa]" />
+                <div className="w-[80vw] h-px bg-[#888888aa]" />
             </motion.div>
 
             <motion.div
@@ -163,68 +169,27 @@ export default function WorkDetail() {
                 transition={{ duration: 1.2, ease: "easeOut" }}
             >
                 <div className="w-full flex flex-col items-center justify-start gap-[10vh] lg:gap-[20vh] md:pb-[30vh] lg:pb-[40vh]">
-                    <div className="relative w-[50vw] max-w-4xl aspect-video flex items-center justify-center">
-                        <img
-                            loading="eager"
-                            alt="Background"
-                            src={data?.bg1}
-                            className="absolute inset-0 w-full h-full object-cover"
-                        />
-                        <Media
-                            src={data?.image1}
-                            alt={data?.title}
-                            className="z-10 w-full h-full object-contain p-[clamp(0.5rem,2vw,1.5rem)] md:p-10"
-                            loading="eager"
-                        />
-                    </div>
-
-                    <div className="relative w-[50vw] max-w-4xl aspect-video flex items-center justify-center bg-[#aaaaaa]">
-                        {data?.bg2 && (
-                            <img
-                                loading="eager"
-                                alt="Background"
-                                src={data?.bg2}
-                                className="absolute inset-0 w-full h-full object-cover"
+                    {mediaItems.map((item, index) => (
+                        <div
+                            key={`${data.id}-media-${index}`}
+                            className="relative w-[50vw] max-w-4xl aspect-video flex items-center justify-center bg-[#aaaaaa]"
+                        >
+                            {item.bg && (
+                                <img
+                                    loading={item.loading}
+                                    alt="Background"
+                                    src={item.bg}
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                            )}
+                            <Media
+                                src={item.image}
+                                alt={data?.title}
+                                className="z-10 w-full h-full object-contain p-[clamp(0.5rem,2vw,1.5rem)] md:p-10"
+                                loading={item.loading}
                             />
-                        )}
-                        <Media
-                            src={data?.image2}
-                            alt={data?.title}
-                            className="z-10 w-full h-full object-contain p-[clamp(0.5rem,2vw,1.5rem)] md:p-10"
-                            loading="eager"
-                        />
-                    </div>
-
-                    <div className="relative w-[50vw] max-w-4xl max-h-[20vh] md:portrait:max-h-[25vh] landscape:max-h-[60vh] lg:max-h-full aspect-video flex items-center justify-center">
-                        <img
-                            alt="Background"
-                            src={data?.bg3}
-                            className="absolute inset-0 w-full h-full object-cover"
-                        />
-                        <Media
-                            src={data?.image3}
-                            alt={data?.title}
-                            className="z-10 w-full h-full object-contain p-[clamp(0.5rem,2vw,1.5rem)] md:p-10"
-                            loading={undefined}
-                        />
-                    </div>
-
-                    <div className="relative w-[50vw] max-w-4xl max-h-[20vh] md:portrait:max-h-[25vh] landscape:max-h-[60vh] lg:max-h-full aspect-video flex items-center justify-center bg-[#aaaaaa]">
-                        {data?.bg4 && (
-                            <img
-                                loading="lazy"
-                                alt="Background"
-                                src={data?.bg4}
-                                className="absolute inset-0 w-full h-full object-cover"
-                            />
-                        )}
-                        <Media
-                            src={data?.image4}
-                            alt={data?.title}
-                            className="z-10 w-full h-full object-contain p-[clamp(0.5rem,2vw,1.5rem)] md:p-10"
-                            loading="lazy"
-                        />
-                    </div>
+                        </div>
+                    ))}
                 </div>
 
                 <motion.div
@@ -257,26 +222,9 @@ export default function WorkDetail() {
                         </div>
                     </div>
 
-                    <div className="w-[80vw] md:w-[35vw] h-full flex flex-col items-start justify-between gap-2 mt-8 md:mt-0">
+                    <div className="w-[80vw] md:w-[35vw] h-auto flex flex-col items-start justify-start gap-4 mt-8 md:mt-0">
                         <h2 className="text-[clamp(1rem,1.5vw,2rem)] md:text-[clamp(1.1rem,2vw,2rem)]">SUMMARY</h2>
                         <p className="text-[clamp(0.8rem,1.5vw,1rem)] lg:text-[clamp(1rem,1.2vw,1.5rem)]">{data?.summary}</p>
-
-                        <Link
-                            key={nextData?.id}
-                            to={`/Works/${nextData?.id}`}
-                            onMouseEnter={() => set("hover")}
-                            onMouseLeave={() => set("default")}
-                            className="flex flex-row items-center justify-end text-[clamp(0.8rem,1vw,1.2rem)] md:text-[clamp(1.1rem,2vw,2rem)] font-light mt-auto ml-auto gap-2"
-                        >
-                            <span>{nextData?.title}</span>
-                            <span>
-                                <svg width="clamp(1.2rem,2vw,2rem)" height="clamp(1.2rem,2vw,2rem)" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <line x1="0.204656" y1="50.2071" x2="100.205" y2="50.2071" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                    <line x1="65.4073" y1="15.2028" x2="100.763" y2="50.5581" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                    <line x1="65.4073" y1="85.2064" x2="100.763" y2="49.851" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                </svg>
-                            </span>
-                        </Link>
                     </div>
                 </motion.div>
             </motion.div>

@@ -55,12 +55,12 @@ export default function Gallery() {
                     style={{ y: yLeft }}
                     className="w-[30vw] flex flex-col gap-[10vh]"
                 >
-                    <Origami url="/girl_and_dog.webp" title="Girl and Dog" designer="Kento Kawazoe" load="eager" />
-                    <Origami url="/shape_of_love.webp" title="Shape of Love" designer="Kento Kawazoe" load={undefined} />
-                    <Origami url="/mother_and_child.webp" title="Mother and Child" designer="Kento Kawazoe" load="eager" />
-                    <Origami url="/prayer.webp" title="Prayer" designer="Kento Kawazoe" load="eager" />
-                    <Origami url="/snail.webp" title="Snail" designer="Kento Kawazoe" load={undefined} />
-                    <Origami url="/dragon.webp" title="Dragon Head" designer="Kento Kawazoe" load={undefined} />
+                    <Origami url="/girl_and_dog.webp" title="Girl and Dog" designer="Sai" load="eager" />
+                    <Origami url="/shape_of_love.webp" title="Shape of Love" designer="Sai" load={undefined} />
+                    <Origami url="/mother_and_child.webp" title="Mother and Child" designer="Sai" load="eager" />
+                    <Origami url="/prayer.webp" title="Prayer" designer="Sai" load="eager" />
+                    <Origami url="/snail.webp" title="Snail" designer="Sai" load={undefined} />
+                    <Origami url="/dragon.webp" title="Dragon Head" designer="Sai" load={undefined} />
                 </motion.div>
 
                 <div className="w-[30vw] flex flex-col gap-[10vh]">
@@ -73,12 +73,12 @@ export default function Gallery() {
             </div>
 
             <div className="md:hidden w-[70vw] flex flex-col pt-[5vh] gap-[10vh]">
-                <Origami url="/girl_and_dog.webp" title="Girl and Dog" designer="Kento Kawazoe" load="eager" />
-                <Origami url="/mother_and_child.webp" title="Mother and Child" designer="Kento Kawazoe" load="eager" />
-                <Origami url="/prayer.webp" title="Prayer" designer="Kento Kawazoe" load="eager" />
-                <Origami url="/snail.webp" title="Snail" designer="Kento Kawazoe" load={undefined} />
-                <Origami url="/shape_of_love.webp" title="Shape of Love" designer="Kento Kawazoe" load={undefined} />
-                <Origami url="/dragon.webp" title="Dragon Head" designer="Kento Kawazoe" load={undefined} />
+                <Origami url="/girl_and_dog.webp" title="Girl and Dog" designer="Sai" load="eager" />
+                <Origami url="/mother_and_child.webp" title="Mother and Child" designer="Sai" load="eager" />
+                <Origami url="/prayer.webp" title="Prayer" designer="Sai" load="eager" />
+                <Origami url="/snail.webp" title="Snail" designer="Sai" load={undefined} />
+                <Origami url="/shape_of_love.webp" title="Shape of Love" designer="Sai" load={undefined} />
+                <Origami url="/dragon.webp" title="Dragon Head" designer="Sai" load={undefined} />
                 <Origami url="/dreaming_bear.webp" title="Dreaming Bear" designer="Giang Dinh" load={undefined} />
                 <Origami url="/samothrace.webp" title="Winged Victory of Samothrace" designer="Takashi Hojo" load={undefined} />
                 <Origami url="/gabriel.webp" title="Gabriel" designer="Takashi Hojo" load={undefined} />
@@ -143,19 +143,16 @@ export default function Gallery() {
                     <motion.span variants={item}>b</motion.span>
                     <motion.span variants={item}>y</motion.span>
                     <motion.span className="w-[clamp(0.3rem,0.4vw,0.8rem)]" variants={item}> </motion.span>
-                    <motion.span variants={item}>K</motion.span>
-                    <motion.span variants={item}>e</motion.span>
-                    <motion.span variants={item}>n</motion.span>
-                    <motion.span variants={item}>t</motion.span>
-                    <motion.span variants={item}>o</motion.span>
+                    <motion.span variants={item}>S</motion.span>
+                    <motion.span variants={item}>a</motion.span>
+                    <motion.span variants={item}>i</motion.span>
                     <motion.span className="w-[clamp(0.3rem,0.4vw,0.8rem)]" variants={item}> </motion.span>
-                    <motion.span variants={item}>K</motion.span>
-                    <motion.span variants={item}>a</motion.span>
-                    <motion.span variants={item}>w</motion.span>
-                    <motion.span variants={item}>a</motion.span>
-                    <motion.span variants={item}>z</motion.span>
+                    <motion.span variants={item}>A</motion.span>
+                    <motion.span variants={item}>n</motion.span>
+                    <motion.span variants={item}>d</motion.span>
                     <motion.span variants={item}>o</motion.span>
-                    <motion.span variants={item}>e</motion.span>
+                    <motion.span variants={item}>n</motion.span>
+                    <motion.span variants={item}>d</motion.span>
                 </motion.h2>
             </div>
         </motion.main>
@@ -181,7 +178,7 @@ function Origami({ url, title, designer,load }: Props) {
                 </div>
                 <div className="w-full flex flex-row justify-between border-[#888888aa] border-b-[0.3px]">
                     <p className="mb-1 text-[#888888] pl-1">Folder</p>
-                    <p className="mb-1 pr-1">Kento Kawazoe</p>
+                    <p className="mb-1 pr-1">Sai</p>
                 </div>
             </div>
         </div>

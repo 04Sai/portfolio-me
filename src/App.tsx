@@ -1,7 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
-import Works from "./pages/Works";
 import WorkDetail from "./pages/WorkDetail";
 import Gallery from "./pages/Gallery";
 import Cursor from "./components/cursor";
@@ -77,8 +76,7 @@ function AnimatedRoutes() {
     >
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
-        <Route path="/Works" element={<Works />} />
-        <Route path="/Works/:id" element={<WorkDetail />} />
+        <Route path="/projects/:id" element={<WorkDetail />} />
         <Route path="/Gallery" element={<Gallery />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
