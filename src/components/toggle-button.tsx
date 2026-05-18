@@ -9,7 +9,7 @@ export default function ToggleButton() {
         <motion.div
             initial={{ opacity: 0, filter: "blur(1px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
         >
             <button
                 className={`w-[3rem] p-[0.1rem] lg:w-[5rem] lg:p-[0.2rem] aspect-[5/2] rounded-full border-[1px] lg:border-[2px] flex flex-row items-center justify-between transition-colors duration-700 

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JavaScript Functions Lab</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+
+      h2 {
+        color: #333;
+      }
+
+      button {
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .output {
+        margin-top: 15px;
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>JavaScript Functions Exercise</h2>
+
+    <button onclick="printName()">Print Name</button>
+    <button onclick="sumTwoNumbers()">Sum Two Numbers</button>
+    <button onclick="sumThreeNumbers(3, 4, 5)">Sum Three Numbers</button>
+    <button onclick="checkAge()">Check Age</button>
+
+    <div class="output" id="output"></div>
+
+    <script>
+
+      function printName() {
+        let name = "Your Name";
+        document.getElementById("output").innerText =
+          "My name is " + name + ".";
+      }
+
+
+      function sumTwoNumbers() {
+        let num1 = parseInt(prompt("Enter first number:"));
+        let num2 = parseInt(prompt("Enter second number:"));
+
+        let sum = num1 + num2;
+
+        document.getElementById("output").innerText =
+          "Sum of two numbers: " + sum;
+      }
+
+
+      function sumThreeNumbers(a, b, c) {
+        let sum = a + b + c;
+
+        document.getElementById("output").innerText =
+          "Sum of three numbers: " + sum;
+      }
+
+
+      function checkAge() {
+        let artist = prompt("Who is your favorite artist?");
+        let age = parseInt(prompt("Enter your age:"));
+
+        let message = "Favorite artist: " + artist + "\n";
+
+        if (age < 25) {
+          message += "They're " + age + " and they're younger than Google.";
+        } else if (age === 25) {
+          message += "They're " + age + " and they're as old as Google.";
+        } else {
+          message += "They're " + age + " and they're older than Google.";
+        }
+
+        document.getElementById("output").innerText = message;
+      }
+    </script>
+  </body>
+</html>

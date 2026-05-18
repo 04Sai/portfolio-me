@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCursorStore } from "../store/useCursorStore";
 import { useThemeStore } from "../store/useThemeStore";
 import { Link } from "react-router-dom";
 import { projects } from "../components/projects";
+import { useLocation } from "react-router-dom";
 
 const item = {
     initial: { y: "2rem", opacity: 0 },
@@ -11,7 +12,7 @@ const item = {
         y: 0,
         opacity: 1,
         transition: {
-            duration: 1,
+            duration: 0.5,
             ease: [0.2, 1, 0.4, 1] as const
         }
     },
@@ -19,12 +20,64 @@ const item = {
 
 export default function Home() {
     const { theme } = useThemeStore();
+    const location = useLocation();
+    const isProjectsHash = location.hash === "#projects" || location.hash === "#project";
+
+    useEffect(() => {
+        if (isProjectsHash) {
+            // Robustly scroll the inner main container to the projects section.
+            // Retry until elements are available (handles route transitions and animations).
+            const tryScroll = () => {
+                const mainEl = document.querySelector("main");
+                const projectsEl = document.getElementById("projects");
+                if (mainEl instanceof HTMLElement && projectsEl instanceof HTMLElement) {
+                    // align to the top of the projects section inside the scroll container
+                    // apply a small negative offset so the first project card isn't flush to the very top
+                    const offset = Math.max(0, projectsEl.offsetTop - 48);
+                    mainEl.scrollTo({ top: offset, left: 0, behavior: "auto" });
+                    return true;
+                }
+                return false;
+            };
+
+            const run = () => {
+                if (!tryScroll()) {
+                    // try again on the next animation frame
+                    requestAnimationFrame(run);
+                }
+            };
+
+            // kickoff
+            requestAnimationFrame(run);
+        }
+    }, [location, isProjectsHash]);
+
+    useEffect(() => {
+        // if WorkDetail set a flag before navigating back, scroll to projects once
+        try {
+            const v = sessionStorage.getItem("scrollToProjects");
+            if (v === "1") {
+                sessionStorage.removeItem("scrollToProjects");
+                const runOnce = () => {
+                    const mainEl = document.querySelector("main");
+                    const projectsEl = document.getElementById("projects");
+                    if (mainEl instanceof HTMLElement && projectsEl instanceof HTMLElement) {
+                        const offset = Math.max(0, projectsEl.offsetTop - 48);
+                        mainEl.scrollTo({ top: offset, left: 0, behavior: "auto" });
+                        return;
+                    }
+                    requestAnimationFrame(runOnce);
+                };
+                requestAnimationFrame(runOnce);
+            }
+        } catch (err) { void err; }
+    }, []);
 
     return (
         <motion.main
             className="pb-[10vh] overflow-y-scroll snap-y snap-mandatory"
             exit={{ opacity: 0, filter: "blur(1px)" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
         >
             {/* about */}
             <motion.section
@@ -32,7 +85,7 @@ export default function Home() {
                 initial={{ opacity: 0, filter: "blur(1px)" }}
                 whileInView={{ opacity: 1, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+                transition={{ duration: 0.45, ease: "easeOut", delay: 0.2 }}
             >
                 <div className="w-[80vw] lg:w-[35vw] lg:h-[clamp(20rem,60vh,40rem)] flex flex-col items-start justify-between font-light leading-none">
                     <div>
@@ -92,7 +145,7 @@ export default function Home() {
                         <h1>ABOUT ME</h1>
                     </div>
 
-                    <div className="w-[80vw] lg:w-[35vw] h-[1px] bg-[#888888aa]"/>
+                    <div className="w-[80vw] lg:w-[35vw] h-px bg-[#888888aa]"/>
 
                     <div className="w-[80vw] lg:w-[35vw] flex flex-col pt-[5vh] lg:pt-[clamp(1rem,7.5vh,3rem)] text-[clamp(0.7rem,1vw,1.2rem)] tracking-[0.1rem] font-light gap-1 leading-[clamp(1.1rem,3vh,1.4rem)]">
                         <p>I am a web developer and designer.</p>
@@ -111,7 +164,7 @@ export default function Home() {
                 initial={{ opacity: 0, filter: "blur(1px)" }}
                 whileInView={{ opacity: 1, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
             >
 
                 <div className="w-[80vw] lg:w-[75vw] flex flex-col items-start justify-start">
@@ -119,7 +172,7 @@ export default function Home() {
                         <h1>SKILLS</h1>
                     </div>
 
-                    <div className="w-[80vw] lg:w-[75vw] h-[1px] bg-[#888888aa]"/>
+                    <div className="w-[80vw] lg:w-[75vw] h-px bg-[#888888aa]"/>
 
                     <div className="mt-[5vh] w-[80vw] lg:w-[75vw] flex flex-col items-start justify-start gap-10 lg:flex-row lg:items-start lg:justify-between">
                         <div className="flex flex-col w-[80vw] lg:w-[25vw] gap-3 font-light">
@@ -200,51 +253,49 @@ function ProjectsSection() {
             initial={{ opacity: 0, filter: "blur(1px)" }}
             whileInView={{ opacity: 1, filter: "blur(0px)" }}
             viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
         >
             <div className="flex flex-col items-start justify-start">
                 <div className="h-[15vh] flex items-end text-[clamp(1rem,1.5vw,2rem)] font-light mb-1">
                     <h1>PROJECTS</h1>
                 </div>
 
-                <div className="w-[80vw] lg:w-[75vw] h-[1px] bg-[#888888aa]"/>
+                <div className="w-[80vw] lg:w-[75vw] h-px bg-[#888888aa]"/>
 
                 <div className="mt-[5vh] w-[80vw] lg:w-[75vw] flex flex-col items-center justify-center">
                     <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        {visibleProjects.map((project) => (
-                            <Link
-                                key={project.id}
-                                to={`/projects/${project.id}`}
-                                className="group flex flex-col gap-2"
-                                onMouseEnter={() => set("hover")}
-                                onMouseLeave={() => set("default")}
-                            >
-                                <div className={`relative w-full aspect-[2/1] rounded-sm overflow-hidden ${theme === "dark" ? "bg-[#35322b]" : "bg-[#d1c7b7]"}`}>
-                                    {project.bg1 && (
-                                        <img
-                                            src={project.bg1}
-                                            alt="Project background"
-                                            className="absolute inset-0 w-full h-full object-cover"
-                                        />
-                                    )}
-                                    {!project.bg1 && project.image1 && !project.image1.endsWith(".mp4") && (
-                                        <img
-                                            src={project.image1}
-                                            alt={project.title || "Project image"}
-                                            className="absolute inset-0 w-full h-full object-cover"
-                                            loading="lazy"
-                                            decoding="async"
-                                        />
-                                    )}
-                                </div>
-                                <div className="flex flex-col gap-2">
-                                    <div className="text-[clamp(0.9rem,1.1vw,1.2rem)] font-light tracking-wide">
-                                        {project.title || "UNTITLED"}
+                        {visibleProjects.map((project) => {
+                            const previewSrc = [project.image1, project.image2, project.image3, project.image4].find(src => src && !src.endsWith(".mp4")) || project.bg1 || project.image1;
+
+                            return (
+                                <Link
+                                    key={project.id}
+                                    to={`/projects/${project.id}`}
+                                    className="group flex flex-col gap-2"
+                                    onMouseEnter={() => set("hover")}
+                                    onMouseLeave={() => set("default")}
+                                >
+                                    <div className={`relative w-full aspect-2/1 rounded-sm overflow-hidden ${theme === "dark" ? "bg-[#35322b]" : "bg-[#d1c7b7]"}`}>
+                                        {previewSrc && (
+                                            <img
+                                                src={previewSrc}
+                                                alt={project.title || "Project image"}
+                                                className="absolute inset-0 w-full h-full object-cover"
+                                                loading="lazy"
+                                                decoding="async"
+                                            />
+                                        )}
                                     </div>
-                                    <div className={`h-[1px] w-full ${theme === "dark" ? "bg-[#88888866]" : "bg-[#88888899]"}`} />
-                                </div>
-                            </Link>
-                        ))}
+
+                                    <div className="flex flex-col gap-2">
+                                        <div className="text-[clamp(0.9rem,1.1vw,1.2rem)] font-light tracking-wide">
+                                            {project.title || "UNTITLED"}
+                                        </div>
+                                        <div className={`h-px w-full ${theme === "dark" ? "bg-[#88888866]" : "bg-[#88888899]"}`} />
+                                    </div>
+                                </Link>
+                            )
+                        })}
                     </div>
 
                     {visibleCount < projects.length && (

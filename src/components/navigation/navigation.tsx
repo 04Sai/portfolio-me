@@ -14,7 +14,7 @@ export default function Navigation() {
                 `}
                 initial={{ opacity: 0, filter: "blur(5px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
             >
                 <div className="flex flex-row items-center gap-5">
                     <NavButton title="HOME" link="/" />
@@ -26,7 +26,7 @@ export default function Navigation() {
                 className="hidden lg:flex lg:flex-col lg:items-start lg:gap-4 lg:w-[10vw]"
                 initial={{ opacity: 0, filter: "blur(5px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
             >
                 <NavButton title="HOME" link="/" />
                 <Contact />

@@ -7,7 +7,7 @@ export default function() {
             initial={{ opacity: 0, filter: "blur(1px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             exit={{ opacity: 0, filter: "blur(1px)" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
         >
             <div className="w-full flex flex-col">
                 <div className="w-full flex items-end justify-center text-[clamp(1rem,1.5vw,2rem)] lg:portrait:text-[clamp(1.5rem,3vw,8rem)] lg:landscape:text-[clamp(1rem,1.5vw,2rem)] font-light">

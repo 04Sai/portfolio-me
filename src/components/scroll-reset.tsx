@@ -3,10 +3,18 @@ import { useLocation } from "react-router-dom";
 
 export default function ScrollReset() {
     const { pathname, hash } = useLocation();
+    const isProjectsHash = hash === "#projects" || hash === "#project";
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (hash) {
+            if (isProjectsHash) {
+                const target = document.getElementById("projects");
+                if (target) {
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                } else {
+                    window.scrollTo(0, 0);
+                }
+            } else if (hash) {
                 const target = document.querySelector(hash);
                 if (target) {
                     target.scrollIntoView({ behavior: "smooth", block: "start" });

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { useParams, NavLink, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { projects } from "../components/projects";
 import Media from "../components/media";
 import { useCursorStore } from "../store/useCursorStore";
@@ -18,6 +19,12 @@ export default function WorkDetail() {
         ? navigableProjects[currentIndex + 1]
         : undefined;
 
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }, [id]);
+
     if (!data) {
         return <NotFound />;
     }
@@ -29,18 +36,26 @@ export default function WorkDetail() {
         { image: data.image4, bg: data.bg4, loading: "lazy" as const },
     ].filter((item) => Boolean(item.image));
 
+    const handleBack = () => {
+        // set a flag so Home knows to scroll to projects after navigation
+        try {
+            sessionStorage.setItem("scrollToProjects", "1");
+        } catch (err) { void err; }
+        navigate("/");
+    };
+
     return (
         <motion.main
             className="relative w-screen min-h-screen flex flex-col pt-[30vh] sm:landscape:pt-[50vh] md:landscape:pt-[50vh] lg:pt-[40vh] pl-[10vw] pr-[10vw] lg:pl-[15vw] lg:pr-[5vw]"
             exit={{ opacity: 0, filter: "blur(1px)" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.45, ease: "easeOut" }}
         >
-            <NavLink to="/#projects">
+            <div role="button" onClick={handleBack}>
                 <motion.div
                     className="fixed top-[8vh] left-[5vw] lg:top-[5vh] lg:left-[15vw] text-[clamp(0.6rem,1vw,1.5rem)] md:text-[clamp(1rem,1.5vw,1.5rem)] font-light flex flex-row items-center gap-1 z-10"
                     initial={{ opacity: 0, filter: "blur(1px)" }}
                     animate={{ opacity: 1, filter: "blur(0px)" }}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+                    transition={{ duration: 0.45, ease: "easeOut", delay: 0.2 }}
                     onMouseEnter={() => set("hover")}
                     onMouseLeave={() => set("default")}
                 >
@@ -52,13 +67,13 @@ export default function WorkDetail() {
                     </span>
                     <span>BACK</span>
                 </motion.div>
-            </NavLink>
+            </div>
 
             <motion.div
                 className="lg:hidden landscape:hidden fixed top-[10vh] right-[5vw] text-[clamp(0.6rem,1vw,1.5rem)] md:text-[clamp(1rem,1.5vw,1.5rem)] font-light flex flex-col items-end justify-start gap-1 z-10"
                 initial={{ opacity: 0, filter: "blur(1px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
                 onMouseEnter={() => set("hover")}
                 onMouseLeave={() => set("default")}
             >
@@ -82,34 +97,13 @@ export default function WorkDetail() {
                         </span>
                     </a>
                 )}
-
-                {data?.demo &&
-                (
-                    <a
-                        href={data?.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1"
-                        onMouseEnter={() => set("hover")}
-                        onMouseLeave={() => set("default")}
-                    >
-                        Demo
-                        <span>
-                            <svg width="clamp(0.6rem,1vw,1.5rem)" height="clamp(0.6rem,1vw,1.5rem)" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <line x1="0.353478" y1="71.3571" x2="71.0642" y2="0.646433" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                <line x1="21.707" y1="0.5" x2="71.707" y2="0.5" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                                <line x1="71.207" y1="50" x2="71.207" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
-                            </svg>
-                        </span>
-                    </a>
-                )}
             </motion.div>
 
             <motion.div
                 className="fixed top-[5vh] left-[10vw] landscape:top-[10vh] lg:top-[15vh] lg:left-[15vw] w-[80vw] flex flex-col"
                 initial={{ opacity: 0, filter: "blur(1px)" }}
                 animate={{ opacity: 1, filter: "blur(0px)" }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
             >
                 <div className="flex flex-row items-end justify-between gap-4">
                     <div className="h-[15vh] flex items-end text-[clamp(1rem,1.5vw,2rem)] md:text-[clamp(1.5rem,2.5vw,2.5rem)] font-light">
@@ -168,20 +162,13 @@ export default function WorkDetail() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
             >
-                <div className="w-full flex flex-col items-center justify-start gap-[10vh] lg:gap-[20vh] md:pb-[30vh] lg:pb-[40vh]">
+                <div className="w-full flex flex-col items-center justify-start gap-[6vh] lg:gap-[10vh] md:pb-[20vh] lg:pb-[28vh]">
                     {mediaItems.map((item, index) => (
                         <div
                             key={`${data.id}-media-${index}`}
-                            className="relative w-[50vw] max-w-4xl aspect-video flex items-center justify-center bg-[#aaaaaa]"
+                            className="relative w-[50vw] max-w-4xl aspect-video flex items-center justify-center"
                         >
-                            {item.bg && (
-                                <img
-                                    loading={item.loading}
-                                    alt="Background"
-                                    src={item.bg}
-                                    className="absolute inset-0 w-full h-full object-cover"
-                                />
-                            )}
+                            {/* removed background layer to preserve transparent previews */}
                             <Media
                                 src={item.image}
                                 alt={data?.title}
@@ -197,7 +184,7 @@ export default function WorkDetail() {
                     initial={{ opacity: 0, filter: "blur(1px)" }}
                     whileInView={{ opacity: 1, filter: "blur(0px)" }}
                     viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                     <div className="w-[80vw] md:w-[40vw] lg:w-[35vw] flex flex-col gap-5 md:gap-8">
                         <div className="flex flex-col items-start justify-between gap-2">
@@ -216,9 +203,41 @@ export default function WorkDetail() {
                             </div>
 
                             <div className="flex flex-col items-start justify-between gap-2">
-                                <h2 className="text-[clamp(1rem,1.5vw,2rem)] md:text-[clamp(1.1rem,2vw,2rem)]">ROLES</h2>
+                                <h2 className="text-[clamp(1rem,1.5vw,2rem)] md:text-[clamp(1.1rem,2vw,2rem)]">ROLE</h2>
                                 <p className="text-[clamp(0.8rem,1.5vw,1rem)] landscape:text-[clamp(0.7rem,1vw,1.2rem)] lg:portrait:text-[clamp(1rem,1.2vw,1.5rem)] lg:landscape:text-[clamp(1rem,1.2vw,1.5rem)]">{data?.roles}</p>
                             </div>
+                        </div>
+
+                        <div className="pt-3">
+                            {data?.demo ? (
+                                <a
+                                    href={data.demo}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 underline text-[clamp(0.8rem,1.2vw,1rem)]"
+                                    onMouseEnter={() => set("hover")}
+                                    onMouseLeave={() => set("default")}
+                                    aria-label={`Open demo for ${data?.title}`}
+                                >
+                                    Open Demo
+                                    <span>
+                                        <svg width="clamp(0.6rem,1vw,1.5rem)" height="clamp(0.6rem,1vw,1.5rem)" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <line x1="0.353478" y1="71.3571" x2="71.0642" y2="0.646433" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                            <line x1="21.707" y1="0.5" x2="71.707" y2="0.5" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                            <line x1="71.207" y1="50" x2="71.207" stroke={`${theme === "dark" ? "white" : "#101010cc"}`} strokeWidth="4"/>
+                                        </svg>
+                                    </span>
+                                </a>
+                            ) : (
+                                <button
+                                    type="button"
+                                    disabled
+                                    className="inline-flex items-center gap-2 opacity-40 cursor-not-allowed text-[clamp(0.8rem,1.2vw,1rem)]"
+                                    aria-label={`Demo unavailable for ${data?.title}`}
+                                >
+                                    Demo unavailable
+                                </button>
+                            )}
                         </div>
                     </div>
 

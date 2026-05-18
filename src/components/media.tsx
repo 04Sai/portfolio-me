@@ -8,10 +8,11 @@ type Props = {
 export default function Media({ src, alt, className, loading=undefined }: Props) {
     if (!src) return null;
 
-    // webp or mp4
     const media = src.split(".").pop()?.toLocaleLowerCase();
 
-    if (media === "webp") {
+    const imageTypes = ["webp", "png", "jpg", "jpeg", "svg", "gif", "avif", "bmp"];
+
+    if (media && imageTypes.includes(media)) {
         return (
             <img
                 src={src}
@@ -22,6 +23,7 @@ export default function Media({ src, alt, className, loading=undefined }: Props)
             />
         )
     }
+
     if (media === "mp4") {
         return (
             <video
@@ -36,5 +38,6 @@ export default function Media({ src, alt, className, loading=undefined }: Props)
             />
         )
     }
+
     return null
 }
