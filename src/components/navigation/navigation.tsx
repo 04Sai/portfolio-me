@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Contact from "./contact";
 import { useCursorStore } from "../../store/useCursorStore";
 import { motion } from "framer-motion";
@@ -18,6 +18,8 @@ export default function Navigation() {
             >
                 <div className="flex flex-row items-center gap-5">
                     <NavButton title="HOME" link="/" />
+                    <NavButton title="PROJECTS" link="/#projects" />
+                    <NavButton title="SKILLS" link="/#skills" />
                 </div>
                 <Contact />
             </motion.div>
@@ -29,6 +31,8 @@ export default function Navigation() {
                 transition={{ duration: 0.45, ease: "easeOut" }}
             >
                 <NavButton title="HOME" link="/" />
+                <NavButton title="PROJECTS" link="/#projects" />
+                <NavButton title="SKILLS" link="/#skills" />
                 <Contact />
             </motion.div>
         </>
@@ -43,9 +47,19 @@ type Props = {
 function NavButton({title, link}: Props) {
     const set = useCursorStore((state) => state.setCursorType);
     const { theme } = useThemeStore();
+    const navigate = useNavigate();
 
     return (
-        <NavLink to={link}>
+        <NavLink
+            to={link}
+            onClick={(event) => {
+                if (link === "/") {
+                    event.preventDefault();
+                    navigate("/");
+                    document.querySelector("main")?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                }
+            }}
+        >
             {({isActive}) => (
             <div
                 className={`group lg:w-[clamp(3.5rem,7vw,10rem)] relative text-[clamp(0.4rem,2vw,1.5rem)] md:text-[clamp(0.8rem,1vw,1.5rem)] tracking-widest font-light

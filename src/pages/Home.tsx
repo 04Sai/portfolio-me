@@ -21,19 +21,21 @@ const item = {
 export default function Home() {
     const { theme } = useThemeStore();
     const location = useLocation();
-    const isProjectsHash = location.hash === "#projects" || location.hash === "#project";
+    const sectionHash = location.hash === "#project" ? "#projects"
+        : location.hash === "#projects" || location.hash === "#skills" ? location.hash
+        : null;
 
     useEffect(() => {
-        if (isProjectsHash) {
-            // Robustly scroll the inner main container to the projects section.
+        if (sectionHash) {
+            // Robustly scroll the inner main container to the requested section.
             // Retry until elements are available (handles route transitions and animations).
             const tryScroll = () => {
                 const mainEl = document.querySelector("main");
-                const projectsEl = document.getElementById("projects");
-                if (mainEl instanceof HTMLElement && projectsEl instanceof HTMLElement) {
-                    // align to the top of the projects section inside the scroll container
+                const sectionEl = document.querySelector(sectionHash);
+                if (mainEl instanceof HTMLElement && sectionEl instanceof HTMLElement) {
+                    // align to the top of the section inside the scroll container
                     // apply a small negative offset so the first project card isn't flush to the very top
-                    const offset = Math.max(0, projectsEl.offsetTop - 48);
+                    const offset = Math.max(0, sectionEl.offsetTop - 48);
                     mainEl.scrollTo({ top: offset, left: 0, behavior: "auto" });
                     return true;
                 }
@@ -50,7 +52,7 @@ export default function Home() {
             // kickoff
             requestAnimationFrame(run);
         }
-    }, [location, isProjectsHash]);
+    }, [location, sectionHash]);
 
     useEffect(() => {
         // if WorkDetail set a flag before navigating back, scroll to projects once
@@ -148,9 +150,9 @@ export default function Home() {
                     <div className="w-[80vw] lg:w-[35vw] h-px bg-[#888888aa]"/>
 
                     <div className="w-[80vw] lg:w-[35vw] flex flex-col pt-[5vh] lg:pt-[clamp(1rem,7.5vh,3rem)] text-[clamp(0.7rem,1vw,1.2rem)] tracking-[0.1rem] font-light gap-1 leading-[clamp(1.1rem,3vh,1.4rem)]">
-                        <p>I am a web developer and designer.</p>
-                        <p>Currently studying Bachelor of Science in Information Technology at the Cavite State University - Imus Campus.</p>
-                        <p>Other than designing websites, I enjoy reading comics and working out.</p>
+                        <p>I’m a web developer and designer who enjoys turning ideas into clear, engaging digital experiences.</p>
+                        <p>I graduated cum laude with a Bachelor of Science in Information Technology from Cavite State University – Imus Campus.</p>
+                        <p>When I’m not designing or building websites, I enjoy reading comics and working out.</p>
                     </div>
                 </div>
             </motion.section>
@@ -161,6 +163,7 @@ export default function Home() {
             {/* skills */}
             <motion.section
                 className="relative w-screen pt-[5vh] pl-[10vw] lg:pt-[clamp(2rem,5vh,5rem)] lg:pl-[15vw] flex flex-col snap-center"
+                id="skills"
                 initial={{ opacity: 0, filter: "blur(1px)" }}
                 whileInView={{ opacity: 1, filter: "blur(0px)" }}
                 viewport={{ once: true, amount: 0.5 }}
@@ -225,14 +228,39 @@ export default function Home() {
 function Email() {
     const set = useCursorStore((state) => state.setCursorType);
     return (
-        <a
-            href="mailto:sai042204@gmail.com"
-            aria-label="Send an email to Sai"
-            onMouseEnter={() => set("hover")}
-            onMouseLeave={() => set("default")}
-        >
-            sai042204@gmail.com
-        </a>
+        <div className="flex flex-col items-start">
+            <a
+                href="mailto:sai042204@gmail.com"
+                aria-label="Send an email to Sai"
+                onMouseEnter={() => set("hover")}
+                onMouseLeave={() => set("default")}
+            >
+                symond042204@gmail.com
+            </a>
+            <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[0.85em]">
+                <a
+                    href="/Barba,%20Symond%20CV.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="View Sai's resume in a new tab"
+                    className="underline underline-offset-4 transition-opacity hover:opacity-60"
+                    onMouseEnter={() => set("hover")}
+                    onMouseLeave={() => set("default")}
+                >
+                    View resume
+                </a>
+                <a
+                    href="/Barba,%20Symond%20RESUME.pdf"
+                    download="Symond-Barba-Resume.pdf"
+                    aria-label="Download Sai's resume"
+                    className="underline underline-offset-4 transition-opacity hover:opacity-60"
+                    onMouseEnter={() => set("hover")}
+                    onMouseLeave={() => set("default")}
+                >
+                    Download resume
+                </a>
+            </span>
+        </div>
     )
 }
 
